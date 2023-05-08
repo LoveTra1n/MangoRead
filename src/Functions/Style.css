@@ -1,0 +1,21 @@
+.pag{
+    transition: 190ms;
+    color: #A5A5A5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 13px;
+    width: 16px;
+    font-size: 24px;
+
+}
+.active{
+    border-radius: 100px !important;
+    height: 45px !important;
+    width: 45px !important;
+    background: #2FE09B !important;
+    color: white !important;
+}
+.popup{
+    overflow: hidden;
+}
