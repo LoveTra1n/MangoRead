@@ -5,7 +5,8 @@ const userSlice = createSlice({
     initialState:{
         currentUser:null,
         password:'',
-        checker:false
+        checker:false,
+        jwt:''
     },reducers:{
         addImage:(state, action)=>{
             state.currentUser.image=action.payload
@@ -14,6 +15,7 @@ const userSlice = createSlice({
             state.password=action.payload
             state.currentUser=action.payload
             state.checker = true
+            state.jwt=action.payload
         },
         logout:(state,action)=>{
             state.currentUser=false

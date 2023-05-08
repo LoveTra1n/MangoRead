@@ -22,16 +22,20 @@ const ItemGenre = ({genre}) => {
 
     return (
         <div style={{marginTop:"10px",display:"flex",alignItems:"center",boxSizing:"border-box",height:"35px"}}>
-            <Input
-                checked={genre_title===genre?.title}
-                onClick={handleInput}
-                value={`${genre?.title}`}
-                type={'checkbox'}
-            />
-            <p style={{fontSize:"24px", margin:"0 0 0 10px"}}>
-                {genre?.title}
-            </p>
+
+            <label style={{marginBottom:"10px"}}>
+                <div style={{display:"flex",alignItems:"center"}}>
+                    <input
+                        checked={genre_title === genre?.title}
+                        onClick={handleInput}
+                        value={`${genre?.title}`}
+                        id="checkbox" type={'checkbox'}/>
+                    <span></span>
+                    <p style={{fontSize:"24px",marginLeft:"10px"}}> {genre?.title}</p>
+                </div>
+            </label>
         </div>
+
     );
 };
 

@@ -8,7 +8,9 @@ import {Alert} from "@mui/material";
 import axios from "axios";
 const Container =styled.div`
   overflow-y: hidden;
-  position: absolute;
+  position: fixed;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   z-index: 4;
@@ -23,6 +25,7 @@ const PopUp = styled.div`
   margin: auto;
   z-index: 2;
   padding: 37px 0 0 60px;
+  position: fixed;
 `;
 const BoxShadow = styled.div`
   width: 100%;
@@ -78,29 +81,32 @@ const CreateComment = () => {
         setText(e.target.value)
     }
     const handeSend = async ()=>{
-        const value=text.split('')
-        try {
-            if (value.length>=5){
-                await axios.post(`http://134.122.75.14:8666/swagger/api/v1/manga/${currentManga.id}/add-comment/`,{
-                    text:text
-                })
-                await dispatch(openCreateComm(false))
-                setError(false)
-            }else {
-                setError(true)
-            }
-        }catch (err){
-            const sign=async ()=>{
-                const res = await axios.post('http://134.122.75.14:8666/api/auth/signin/',{
+        const sign=async ()=>{
+            const access = await axios.post('http://134.122.75.14:8666/api/token/refresh/',{
+                refresh:currentUser.jwt
+            })
+            const token = access.data.access
+            await axios.post('http://134.122.75.14:8666/api/auth/signin/',{
                     username:currentUser.username,
-                    password:password.password
-                })
-                await axios.post('http://134.122.75.14:8666/api/token/refresh/',{
-                    refresh:res.data.refresh
-                })
-            }
-            sign()
+                    password:currentUser.password
+            },{
+                headers:{
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            await axios.post(`http://134.122.75.14:8666/api/v1/manga/${currentManga.id}/add-comment/`,{
+                text:text
+            },{
+                headers:{
+                    'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                }
+            })
+            await dispatch(openCreateComm(false))
+            setError(false)
         }
+        sign()
     }
     return (
         <Container className={"popup"}>

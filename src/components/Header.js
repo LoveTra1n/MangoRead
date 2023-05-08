@@ -3,11 +3,12 @@ import Logo from '../images/Logo.svg'
 import styled from "styled-components";
 import SearchIcon from "../images/search.svg"
 import {useDispatch, useSelector} from "react-redux";
-import {loginLine, regLine, showAuth} from "../store/widgetSlice";
+import {loginLine, moreOpen, regLine, showAuth} from "../store/widgetSlice";
 import More from "../images/arrow_drop_down.svg"
 import axios from "axios";
 import {addImage, logout} from "../store/userSlice";
 import SensorDoorIcon from '@mui/icons-material/SensorDoor';
+import {Link} from "react-router-dom";
 const Container = styled.div`
     font-family: Montserrat;
    margin: auto;
@@ -119,6 +120,7 @@ const MoreDrop = styled.div`
   padding: 15px;
   box-sizing: border-box;
   align-items: center;
+  z-index: 3;
 `;
 const Hover=styled.div`
   width: 100%;
@@ -139,6 +141,7 @@ const Header = () => {
     const dispatch = useDispatch()
     const {currentUser}=useSelector(state=>state.user)
     const {checker}=useSelector(state=>state.user)
+    const {morePopup}=useSelector(state=>state.widget)
 
     const handleAuth=()=>{
         dispatch(showAuth(true))
@@ -163,16 +166,23 @@ const Header = () => {
         fetchUser()
 
     },[currentUser])
+    const closeMore = ()=>{
+        dispatch(moreOpen(!morePopup))
+    }
 
     return (
         <Container>
-            <LogoInfo>
-                <img src={Logo}/>
-                <div style={{display:"flex",flexDirection:"column", justifyContent:"center",marginLeft:"5px"}}>
-                    <h1 style={{fontSize:"20px", height:"24px",margin:0}}>MangoRead</h1>
-                    <p style={{fontSize:"16px", height:"20px",marginTop:"4px",marginBottom:"0px"}}>Читай мангу с нами</p>
-                </div>
-            </LogoInfo>
+
+                <LogoInfo>
+                    <Link to={'/'}>
+                        <img src={Logo}/>
+                    </Link>
+                    <div style={{display:"flex",flexDirection:"column", justifyContent:"center",marginLeft:"5px",textDecoration:"none",outline:"none"}}>
+                        <h1 style={{fontSize:"20px", height:"24px",margin:0}}>MangoRead</h1>
+                        <p style={{fontSize:"16px", height:"20px",marginTop:"4px",marginBottom:"0px"}}>Читай мангу с нами</p>
+                    </div>
+                </LogoInfo>
+
 
             <Search>
                 <Img src={SearchIcon}/>
@@ -184,13 +194,13 @@ const Header = () => {
                     <p>{currentUser?.username}</p>
                     <UserMore>
                         <Avatar src={currentUser?.image}/>
-                        <img style={{marginLeft:"16px"}} src={More}/>
-                        <MoreDrop>
+                        <img onClick={closeMore} style={{marginLeft:"16px"}} src={More}/>
+                        {morePopup&&<MoreDrop>
                             <Hover onClick={logoutFunc}>
                                 <SensorDoorIcon/>
                                 Выйти
                             </Hover>
-                        </MoreDrop>
+                        </MoreDrop>}
                     </UserMore>
                 </UserInfo>
 

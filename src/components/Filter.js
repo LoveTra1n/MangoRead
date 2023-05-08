@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import "../App.css"
+import "./checkbox.css"
 import styled from "styled-components";
 import ChevronRight from "../images/Vector 2.svg"
 import Line from "../images/Line 13.svg"
@@ -7,7 +8,8 @@ import Back from "../images/Vector 2 (1).svg"
 import axios from "axios";
 import ItemGenre from "../UI/ItemGenre";
 import {useDispatch, useSelector} from "react-redux";
-import {showGenre, setTypes, setAfters, setBefores, updateAction} from "../store/widgetSlice";
+import {showGenre, setTypes, setAfters, setBefores, updateAction, setGenre} from "../store/widgetSlice";
+import {Label} from "@mui/icons-material";
 const Container = styled.div`
   padding-left: 15px;
   padding-right: 15px;
@@ -24,6 +26,7 @@ const Input = styled.input`
   margin: 0;
   width: 35px;
   height: 35px;
+ 
 `;
 const DateInput = styled.input`
   width: 168px;
@@ -47,6 +50,8 @@ const Item = styled.div`
 `;
 const P = styled.text`
   font-size: 24px;
+  margin-left: 10px;
+  
 `;
 const AddReset = styled.div`
   margin-bottom: 10px;
@@ -102,7 +107,7 @@ const Genre = styled.div`
 `;
 
 const Filter = () => {
-    const [type,setType] = useState('')
+    const [types,setType] = useState('')
     const [dataGenre,setDataGenre]=useState([])
     const [before,setBefore]=useState(0)
     const [after,setAfter]=useState(2022)
@@ -110,6 +115,7 @@ const Filter = () => {
 
     const dispatch = useDispatch()
     const {filterGenre} = useSelector(state=>state.widget)
+    const {type}=useSelector(state=>state.widget)
 
     useEffect(()=>{
         const fetchGenre = async ()=>{
@@ -120,14 +126,24 @@ const Filter = () => {
 
     },[type])
     const submitFilter = () => {
-      dispatch(setTypes(type))
+      dispatch(setTypes(types))
       dispatch(setAfters(after))
       dispatch(setBefores(before))
       dispatch(updateAction(true))
     }
+    const clearFilter=()=>{
+        dispatch(setTypes(''))
+        dispatch(setAfters(2022))
+        dispatch(setBefores(0))
+        dispatch(updateAction(false))
+        dispatch(setGenre(''))
+        setType('')
+        setAfter(2022)
+        setBefore(0)
+    }
 
     const handleInput =(e)=>{
-        if(type===e.target.value){
+        if(types===e.target.value){
             setType('')
         }else {
             setType(e.target.value)
@@ -164,52 +180,68 @@ const Filter = () => {
                                 <img onClick={handleClick} style={{marginLeft: "17px",cursor:"pointer"}} src={ChevronRight}/>
                             </div>
                         </div>
-                        <div>
+                        <div style={{display:"flex",flexDirection:"column"}}>
                             <p style={{fontSize: "24px", height: "20px"}}>Тип</p>
-                            <Item>
-                                <Input
-                                    checked={type === 'Манга'}
-                                    onClick={handleInput}
-                                    id="checkbox"
-                                    value={'Манга'}
-                                    type={'checkbox'}/>
-                                <P>Манга</P>
-                            </Item>
-                            <Item>
-                                <Input
-                                    checked={type === 'Манхва'}
-                                    onClick={handleInput}
-                                    value={'Манхва'}
-                                    id="checkbox" type={'checkbox'}/>
-                                <P>Манхва</P>
-                            </Item>
-                            <Item>
-                                <Input
-                                    checked={type === 'Комиксы'}
-                                    onClick={handleInput}
-                                    value={'Комиксы'}
-                                    type={'checkbox'}/>
-                                <P>Комиксы</P>
-                            </Item>
-                            <Item>
-                                <Input
-                                    checked={type === 'Маньхуа'}
-                                    onClick={handleInput}
-                                    value={'Маньхуа'}
-                                    type={'checkbox'}/>
-                                <P>Маньхуа</P>
-                            </Item>
+                            <label style={{marginBottom:"10px"}}>
+                                <div style={{display:"flex"}}>
+                                    <input
+
+                                        checked={types === 'Манга'}
+                                        onClick={handleInput}
+                                        id="checkbox"
+                                        value={'Манга'}
+                                        type={'checkbox'}/>
+                                    <span></span>
+                                    <P>Манга</P>
+                                </div>
+                            </label>
+
+                            <label style={{marginBottom:"10px"}}>
+                                <div style={{display:"flex"}}>
+                                    <input
+                                        checked={types === 'Манхва'}
+                                        onClick={handleInput}
+                                        value={'Манхва'}
+                                        id="checkbox" type={'checkbox'}/>
+                                    <span></span>
+                                    <P>Манхва</P>
+                                </div>
+                            </label>
+
+                            <label style={{marginBottom:"10px"}}>
+                                <div style={{display:"flex"}}>
+                                    <input
+                                        checked={types === 'Комиксы'}
+                                        onClick={handleInput}
+                                        value={'Комиксы'}
+                                        id="checkbox" type={'checkbox'}/>
+                                    <span></span>
+                                    <P>Комиксы</P>
+                                </div>
+                            </label>
+
+                            <label style={{marginBottom:"10px"}}>
+                                <div style={{display:"flex"}}>
+                                    <input
+                                        checked={types === 'Маньхуа'}
+                                        onClick={handleInput}
+                                        value={'Маньхуа'}
+                                        id="checkbox" type={'checkbox'}/>
+                                    <span></span>
+                                    <P>Маньхуа</P>
+                                </div>
+                            </label>
                         </div>
                         <div style={{display: "flex", justifyContent: "space-between", marginTop: "33px"}}>
-                            <DateInput onChange={(e)=>setBefore(e.target.value)} type={"number"} placeholder={"От 0"}/>
+                            <DateInput value={before} onChange={(e)=>setBefore(e.target.value)} type={"number"} placeholder={"От 0"}/>
                             <img src={Line}/>
-                            <DateInput onChange={(e)=>setAfter(e.target.value)}type={"number"} placeholder={"До 2022"}/>
+                            <DateInput value={after} onChange={(e)=>setAfter(e.target.value)}type={"number"} placeholder={"До 2022"}/>
                         </div>
                     </div>}
 
 
             <AddReset style={{display:"flex",justifyContent:"space-between"}}>
-                <ButtonReset>сбросить</ButtonReset>
+                <ButtonReset onClick={clearFilter}>сбросить</ButtonReset>
                 <ButtonApply onClick={submitFilter}>применить</ButtonApply>
             </AddReset>
         </Container>

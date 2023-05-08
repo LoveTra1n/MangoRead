@@ -52,6 +52,11 @@ const Comments = () => {
 
     const createCommentModal =()=>{
         dispatch(openCreateComm(true))
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth',
+        });
     }
 
     return (

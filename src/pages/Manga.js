@@ -4,13 +4,14 @@ import Back from "../images/BackUp.svg"
 import styled from "styled-components";
 import axios from "axios";
 import Comments from "../components/Comments"
-
+import {useNavigate} from "react-router-dom";
 const Container = styled.div``;
 
 const BackUp =styled.div`
   margin-top: 33px;
   margin-bottom: 33px;
   display: flex;
+  cursor: pointer;
   p{
     font-size: 24px;
     color: #878787;
@@ -50,6 +51,7 @@ const TitleBlock = styled.div`
 const Desc =styled.div`
     padding-bottom: 33px;
     border-bottom: #CECECE 2px solid;
+    max-width: 1240px;
     p{
       font-family: MontserratMedium;
       
@@ -64,7 +66,7 @@ const Desc =styled.div`
 const Manga = () => {
     const {currentManga}=useSelector(state=>state.manga)
     const [genres,setGenres] = useState([])
-
+    const navigate = useNavigate()
     const sort=(arr)=>{
         const genres = []
         for (let i = 0; i <arr.length; i++) {
@@ -76,6 +78,12 @@ const Manga = () => {
 
     }
     useEffect(()=>{
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth',
+        });
+
         const fetchGenre = async ()=>{
             const res = await axios.get('http://134.122.75.14:8666/api/v1/genre/')
             const arr = res.data
@@ -87,7 +95,7 @@ const Manga = () => {
 
     return (
         <Container>
-            <BackUp>
+            <BackUp onClick={()=>navigate(-1)}>
                 <img src={Back}/>
                 <p>Назад</p>
             </BackUp>
@@ -99,14 +107,14 @@ const Manga = () => {
                         <p style={{marginTop:"40px", fontSize:"30px"}}>Информация:</p>
                         <p style={{display:"flex"}}>Тип: <div style={{marginLeft:"10px",color:"#878787"}}>{currentManga?.type}</div></p>
                         <p style={{display:"flex"}}>Год: <div style={{marginLeft:"10px",color:"#878787"}}>{currentManga?.issue_year}</div></p>
-                        <p style={{display:"flex"}}>Жанры:<div style={{marginLeft:"10px",color:"#878787"}}>{genres.map(g=><text>{g.title},</text>)}</div></p>
+                        <p style={{display:"flex"}}>Жанры:<div style={{marginLeft:"10px",color:"#878787",display:"flex",flexWrap:"wrap"}}>{genres.map(g=><text>{g.title},</text>)}</div></p>
                     </Info>
                 </TitleBlock>
                 <Desc>
                     <p style={{marginBottom:"10px"}}>Синопсис</p>
-                    <span style={{fontSize:"24px",color:"#616161"}}>
+                    <p style={{fontSize:"24px",color:"#616161",maxWidth:"1240px"}}>
                         {currentManga.description}
-                    </span>
+                    </p>
                 </Desc>
                 <Comments/>
             </MainBlock>

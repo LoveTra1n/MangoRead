@@ -8,11 +8,12 @@ import React from "react";
 import {useSelector} from "react-redux";
 import Manga from "./pages/Manga";
 import CreateComment from "./components/CreateComment";
+import Footer from "./components/Footer";
 
 
  const Container = styled.div`
    margin: auto;
-   max-width: 1240px;
+   max-width: 1240px !important;
    display: flex;
    justify-content: space-between;
    flex-direction: column;
@@ -40,6 +41,7 @@ function App() {
                     <Route path={'/:id'} element={<Manga/>}/>
                 </Routes>
             </Container>
+            <Footer/>
         </BrowserRouter>
     </div>
   );

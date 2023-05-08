@@ -5,6 +5,7 @@ import axios from "axios";
 import styled from "styled-components";
 import {loadingAction} from "../store/widgetSlice";
 import {CircularProgress} from "@mui/material";
+import PaginationCards from "../Functions/PaginationCards";
 
 const Container = styled.div`
   width: 820px;
@@ -25,6 +26,8 @@ const Cards = () => {
 
     const [manga, setManga] = useState([])
     const {check19}=useSelector(state=>state.widget)
+    const [currentPage,setCurrentPage]=useState(1)
+    const [postsPerPage] = useState(12)
 
 
         useEffect(() => {
@@ -38,6 +41,11 @@ const Cards = () => {
                 fetchList()
             }
         }, [])
+
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = manga.slice(indexOfFirstPost, indexOfLastPost)
+    const howManyPages = Math.ceil(manga.length/postsPerPage)
 
 
     const sort = (arr) => {
@@ -58,11 +66,15 @@ const Cards = () => {
     }, [update])
 
     return (
-        <Container>
-            {loading
-                ?<CircularProgress style={{margin:"auto"}}/>
-                :manga.slice(0, 12).map((m) => <CardsItem key={m.id} data={m}/>)}
-        </Container>
+            <Container>
+                {loading
+                    ?<CircularProgress style={{margin:"auto"}}/>
+                    :currentPosts.map((m) => <CardsItem key={m.id} data={m}/>)}
+                <div style={{width:"100%"}}>
+                    <PaginationCards pages={howManyPages} setCurrentPage={setCurrentPage}/>
+                </div>
+            </Container>
+
     );
 };
 

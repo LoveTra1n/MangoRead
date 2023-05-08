@@ -8,7 +8,8 @@ import {loginLine, showAuth,regLine} from "../store/widgetSlice";
 import "../UI/css/Style.css"
 const Container = styled.div`
   overflow-x: hidden;
-  position: absolute;
+  position: fixed;
+  overflow: hidden;
   width: 100%;
   height: 100%;
   z-index: 4;
@@ -161,7 +162,16 @@ const Auth = () => {
         formData.append('nickname',nick)
         formData.append('password',password)
         const res = await axios.post('http://134.122.75.14:8666/api/auth/signup/',formData)
-        res.status===201&&dispatch(addCurrentUser(res.data))
+        if (res.status<=200||res.status<400){
+            const res = await axios.post('http://134.122.75.14:8666/api/auth/signin/',formData)
+            res.status<=200&&dispatch(addCurrentUser({
+                username:username,
+                nickname:nick,
+                password:password,
+                jwt:res.data.refresh
+            }))
+            await dispatch(showAuth(false))
+        }
         await dispatch(showAuth(false))
     }
     const loginData = async ()=>{
@@ -172,7 +182,8 @@ const Auth = () => {
         res.status<=200&&dispatch(addCurrentUser({
             username:username,
             nickname:nick,
-            password:password
+            password:password,
+            jwt:res.data.refresh
         }))
         await dispatch(showAuth(false))
     }

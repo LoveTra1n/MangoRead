@@ -14,7 +14,8 @@ export const widgetSlice = createSlice({
         check19:false,
         reg:true,
         login:false,
-        commentModal:false
+        commentModal:false,
+        morePopup:false,
     },
     reducers:{
         showAuth:(state, action)=>{
@@ -26,7 +27,9 @@ export const widgetSlice = createSlice({
         loginLine:(state, action)=>{
             state.login=action.payload
         },
-
+        moreOpen:(state, action)=>{
+            state.morePopup=action.payload
+        },
         showGenre:(state, action)=>{
             state.filterGenre=action.payload
         },
@@ -55,5 +58,5 @@ export const widgetSlice = createSlice({
     }
 })
 
-export const {showGenre,setGenre,setAfters,setBefores,setTypes,updateAction,loadingAction,showAuth,regLine,loginLine,openCreateComm}=widgetSlice.actions
+export const {showGenre,setGenre,setAfters,setBefores,setTypes,updateAction,loadingAction,showAuth,regLine,loginLine,openCreateComm,moreOpen}=widgetSlice.actions
 export default widgetSlice.reducer

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
+import Prevs from "../images/Vector 2 (2).svg";
+import Nexts from "../images/Vector 3.svg";
 import styled from "styled-components";
-import Prevs from "../images/Vector 2 (2).svg"
-import Nexts from "../images/Vector 3.svg"
 import "./Style.css"
 const Prev = styled.img`
   cursor: pointer;
@@ -20,7 +20,7 @@ const A = styled.a`
   width: 16px;
   font-size: 24px;
 `;
-const PaginationCom = ({pages,setCurrentPage}) => {
+const PaginationCards = ({pages,setCurrentPage}) => {
     const [currentButton,setCurrentButton]=useState(1)
     const [arrayOfCurrButtons,setArrayOfCurrButtons]=useState([])
 
@@ -88,4 +88,4 @@ const PaginationCom = ({pages,setCurrentPage}) => {
     );
 };
 
-export default PaginationCom;
+export default PaginationCards;

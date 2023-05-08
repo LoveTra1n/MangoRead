@@ -1,0 +1,29 @@
+label input {
+    display: none;/* <--скрываем дефолтный чекбокс */
+}
+label span {
+    cursor: pointer;
+    height: 35px;
+    width: 35px;
+    border: 2px solid #2FE09B;
+    border-radius: 5px;
+    display: inline-block;
+
+    position: relative;
+    box-sizing: border-box;
+    padding:3px;
+    margin: 0;
+    user-select: none;
+    user-focus: none;
+}
+[type=checkbox]:checked + span{
+    background: #2FE09B;
+}
+[type=checkbox]:checked + span:before {
+    position: absolute;
+    content: url("../images/Vector 4.svg");
+    margin: auto;
+    margin: auto;
+    font-size:23px;
+    background: #2FE09B;
+}
