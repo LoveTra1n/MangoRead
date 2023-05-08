@@ -31,6 +31,7 @@ const Cards = () => {
 
 
         useEffect(() => {
+
             if (!check19) {
                 dispatch(loadingAction(true))
                 const fetchList = async () => {

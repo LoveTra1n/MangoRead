@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Logo from '../images/Logo.svg'
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 import SearchIcon from "../images/search.svg"
 import {useDispatch, useSelector} from "react-redux";
 import {loginLine, moreOpen, regLine, showAuth} from "../store/widgetSlice";
@@ -9,6 +9,11 @@ import axios from "axios";
 import {addImage, logout} from "../store/userSlice";
 import SensorDoorIcon from '@mui/icons-material/SensorDoor';
 import {Link} from "react-router-dom";
+import {loadingAction} from "../store/widgetSlice";
+import {LocalActivity} from "@mui/icons-material";
+import SearchPost from "../UI/SearchPost";
+
+
 const Container = styled.div`
     font-family: Montserrat;
    margin: auto;
@@ -29,12 +34,11 @@ const Input = styled.input`
   height: 56px;
   border-radius: 8px;
   border: #878787 2px solid;
-  padding-left: 56px;
   font-size: 20px;
   outline-color: #AD02E0;
   caret-color: #AD02E0;
   transition: 300ms;
-  
+  padding-left: 56px;
 `;
 const Img = styled.img`
   position: absolute;
@@ -135,14 +139,25 @@ const Hover=styled.div`
     color: #F3F3F3;
   }
 `;
-
-
+const SearchTab=styled.div`
+  position: absolute;
+  width: 500px;
+  min-height: 200px;
+  max-height: 500px;
+  background: white;
+  border-radius: 10px;
+  z-index: 5;
+  padding: 10px;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.15);;
+`;
 const Header = () => {
     const dispatch = useDispatch()
     const {currentUser}=useSelector(state=>state.user)
     const {checker}=useSelector(state=>state.user)
     const {morePopup}=useSelector(state=>state.widget)
-
+    const [value,setValue]=useState('')
+    const [manga,setManga]=useState([])
+    const [loading,setLoading]=useState(false)
     const handleAuth=()=>{
         dispatch(showAuth(true))
     }
@@ -150,9 +165,16 @@ const Header = () => {
         dispatch(logout())
 
     }
-
     useEffect(()=>{
-
+        setLoading(true)
+        const fetchData=async ()=>{
+            const res =await axios.get('http://134.122.75.14:8666/api/v1/manga/')
+            setManga(res.data)
+            setLoading(false)
+        }
+        fetchData()
+    },[])
+    useEffect(()=>{
         const fetchUser=async ()=>{
             const res = axios.get('http://134.122.75.14:8666/api/auth/profile/')
             const arr = (await res).data
@@ -168,6 +190,9 @@ const Header = () => {
     },[currentUser])
     const closeMore = ()=>{
         dispatch(moreOpen(!morePopup))
+    }
+    const handleChange=(e)=>{
+        setValue(e.target.value)
     }
 
     return (
@@ -186,7 +211,17 @@ const Header = () => {
 
             <Search>
                 <Img src={SearchIcon}/>
-                <Input placeholder={'search'}/>
+                <Input style={{paddingLeft:"56"}} onChange={handleChange} placeholder={'search'}/>
+                {value&&<SearchTab>
+                    {
+                     manga.filter(post=>{
+                         if (post.ru_name.toLocaleLowerCase().includes(value.toLocaleLowerCase())){
+                             return post
+                         }
+                         return false
+                     }).slice(0,5).map((p)=><SearchPost key={p.id} data={p}/> )
+                    }
+                </SearchTab>}
             </Search>
 
             {checker
